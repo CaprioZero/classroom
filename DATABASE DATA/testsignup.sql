@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2020 at 05:57 AM
+-- Generation Time: Nov 28, 2020 at 06:04 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `firstname` varchar(100) NOT NULL,
-  `lastname` varchar(100) NOT NULL,
+  `firstname` varchar(100) CHARACTER SET utf8 COLLATE utf8_vietnamese_ci NOT NULL,
+  `lastname` varchar(100) CHARACTER SET utf8 COLLATE utf8_vietnamese_ci NOT NULL,
   `email` varchar(50) NOT NULL,
   `mobilenumber` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `mobilenumber`, `password`, `token`, `is_active`, `date_time`) VALUES
-(3, 'test', 'test', 'nhoxhoakuter2000@gmail.com', '0969072203', '$2y$10$cat7lKgyPhWwkU8VFHN5Lu/KFxNabm3VxNDK/AMmwTDzcQXR/gYZy', '37333ab07c7dba25cde088b48d8c54b3', '1', '2020-11-28');
+(4, 'Dương Minh', 'Ngọc', 'gbq57052@eoopy.com', '0999999999', '$2y$10$P9ETnog0ClOUKsuQq1O6W.3eovRA2YD7SbsBd6Mi7AfI3Y5VXAN.O', 'f5107b42aeb1b69ddc4ec5d0c0e849ae', '1', '2020-11-28');
 
 --
 -- Indexes for dumped tables
@@ -64,7 +64,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

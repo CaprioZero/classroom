@@ -45,16 +45,7 @@
                 $_password = mysqli_real_escape_string($connection, $password);
 
                 // perform validation
-                if(!preg_match("/^[a-zA-Z ]*$/", $_first_name)) {
-                    $f_NameErr = '<div class="alert alert-danger">
-                            Only letters and white space allowed.
-                        </div>';
-                }
-                if(!preg_match("/^[a-zA-Z ]*$/", $_last_name)) {
-                    $l_NameErr = '<div class="alert alert-danger">
-                            Only letters and white space allowed.
-                        </div>';
-                }
+
                 if(!filter_var($_email, FILTER_VALIDATE_EMAIL)) {
                     $_emailErr = '<div class="alert alert-danger">
                             Email format is invalid.
@@ -72,8 +63,7 @@
                 }
                 
                 // Store the data in db, if all the preg_match condition met
-                if((preg_match("/^[a-zA-Z ]*$/", $_first_name)) && (preg_match("/^[a-zA-Z ]*$/", $_last_name)) &&
-                 (filter_var($_email, FILTER_VALIDATE_EMAIL)) && (preg_match("/^[0-9]{10}+$/", $_mobile_number)) && 
+                if((filter_var($_email, FILTER_VALIDATE_EMAIL)) && (preg_match("/^[0-9]{10}+$/", $_mobile_number)) && 
                  (strlen($_password) >= 6)){
 
                     // Generate random activation token
@@ -102,7 +92,7 @@
 
                         // Create the Transport
                         $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                        ->setUsername('Email needed to send people mail')
+                        ->setUsername('Email to send people code')
                         ->setPassword('That account password');
 
                         // Create the Mailer using your created Transport
