@@ -11,8 +11,8 @@
     $hostname = "localhost";
     $username = "root";
     $password = "";
-    $dbname = "testsignup";
+    $dbname = "classroom";
     
-    $connection = mysqli_connect($hostname, $username, $password, $dbname) or die("Database connection not established.")
-
+    $connection = mysqli_connect($hostname, $username, $password, $dbname) or die("Database connection not established.");
+    date_default_timezone_set("Asia/Ho_Chi_Minh");
 ?>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <title>PHP User Registration & Login System Demo</title>
+    <title>Log in</title>
     <!-- jQuery + Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
@@ -26,11 +26,14 @@
             <div class="inner-block">
 
                 <form action="" method="post">
+                <?php
+echo ErrorMessage();
+echo SuccessMessage();
+?>
                     <h3>Login</h3>
 
                     <?php echo $accountNotExistErr; ?>
                     <?php echo $emailPwdErr; ?>
-                    <?php echo $verificationRequiredErr; ?>
                     <?php echo $email_empty_err; ?>
                     <?php echo $pass_empty_err; ?>
 
@@ -45,13 +48,22 @@
                             id="password_signin" />
                     </div>
 
-                    <button type="submit" name="login" id="sign_in" class="btn btn-outline-primary btn-lg btn-block">Sign
+                    <button type="submit" name="login" id="sign_in" class="btn btn-outline-primary btn-lg btn-block">Log
                         in</button>
+                        <p style="margin-top: 10px;"><a href="resetpassword.php">Forgot your password?</a></p>
                 </form>
             </div>
         </div>
     </div>
-
+    <script language="JavaScript" type="text/javascript">
+         $(document).ready(function(){
+            window.setTimeout(function() {
+              $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(".alert").remove(); 
+              });
+            }, 2000);
+          });
+      </script>
 </body>
 
 </html>

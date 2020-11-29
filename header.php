@@ -9,10 +9,10 @@
         <div class="collapse navbar-collapse" id="navbarColor02">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="http://localhost/classroom/loginpage.php">Log in</a>
+                    <a class="nav-link" href="loginpage.php">Log in</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="http://localhost/classroom/signup.php">Sign up</a>
+                    <a class="nav-link" href="signup.php">Sign up</a>
                 </li>
             </ul>
         </div>

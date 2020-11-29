@@ -2,13 +2,10 @@
    
     // Database connection
     include('./config/db.php');
-
-    // Swiftmailer lib
-    require_once './lib/vendor/autoload.php';
     
     // Error & success messages
     global $success_msg, $email_exist, $f_NameErr, $l_NameErr, $_emailErr, $_mobileErr, $_passwordErr;
-    global $fNameEmptyErr, $lNameEmptyErr, $emailEmptyErr, $mobileEmptyErr, $passwordEmptyErr, $email_verify_err, $email_verify_success;
+    global $fNameEmptyErr, $lNameEmptyErr, $emailEmptyErr, $mobileEmptyErr, $passwordEmptyErr;
     
     // Set empty form vars for validation mapping
     $_first_name = $_last_name = $_email = $_mobile_number = $_password = "";
@@ -66,16 +63,11 @@
                 if((filter_var($_email, FILTER_VALIDATE_EMAIL)) && (preg_match("/^[0-9]{10}+$/", $_mobile_number)) && 
                  (strlen($_password) >= 6)){
 
-                    // Generate random activation token
-                    $token = md5(rand().time());
-
                     // Password hash
                     $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
                     // Query
-                    $sql = "INSERT INTO users (firstname, lastname, email, mobilenumber, password, token, is_active,
-                    date_time) VALUES ('{$firstname}', '{$lastname}', '{$email}', '{$mobilenumber}', '{$password_hash}', 
-                    '{$token}', '0', now())";
+                    $sql = "INSERT INTO users (firstname, lastname, email, mobilenumber, password, date_time) VALUES ('{$firstname}', '{$lastname}', '{$email}', '{$mobilenumber}', '{$password_hash}', now())";
                     
                     // Create mysql query
                     $sqlQuery = mysqli_query($connection, $sql);
@@ -83,41 +75,6 @@
                     if(!$sqlQuery){
                         die("MySQL query failed!" . mysqli_error($connection));
                     } 
-
-                    // Send verification email
-                    if($sqlQuery) {
-                        $msg = 'Click on the activation link to verify your email. <br><br>
-                          <a href="http://localhost/classroom/user_verificaiton.php?token='.$token.'"> Click here to verify email</a>
-                        ';
-
-                        // Create the Transport
-                        $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                        ->setUsername('Email to send people code')
-                        ->setPassword('That account password');
-
-                        // Create the Mailer using your created Transport
-                        $mailer = new Swift_Mailer($transport);
-
-                        // Create a message
-                        $message = (new Swift_Message('Please Verify Email Address!'))
-                        ->setFrom([$email => $firstname . ' ' . $lastname])
-                        ->setTo($email)
-                        ->addPart($msg, "text/html")
-                        ->setBody('Hello! User');
-
-                        // Send the message
-                        $result = $mailer->send($message);
-                          
-                        if(!$result){
-                            $email_verify_err = '<div class="alert alert-danger">
-                                    Verification email coud not be sent!
-                            </div>';
-                        } else {
-                            $email_verify_success = '<div class="alert alert-success">
-                                Verification email has been sent!
-                            </div>';
-                        }
-                    }
                 }
             }
         } else {

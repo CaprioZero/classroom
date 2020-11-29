@@ -1,6 +1,7 @@
+<?php require_once ("config/redirector.php"); ?>
 <?php     
     session_start();
     session_destroy();
       
-    header("Location: http://localhost/classroom/loginpage.php")
+    Redirect_to("loginpage.php");
 ;?>

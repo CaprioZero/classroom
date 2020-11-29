@@ -1,9 +1,11 @@
+<?php require_once ("config/redirector.php"); ?>
+<?php require_once ("config/messages.php"); ?>
 <?php
    
     // Database connection
     include('./config/db.php');
 
-    global $wrongPwdErr, $accountNotExistErr, $emailPwdErr, $verificationRequiredErr, $email_empty_err, $pass_empty_err;
+    global $wrongPwdErr, $accountNotExistErr, $emailPwdErr, $email_empty_err, $pass_empty_err;
 
     if(isset($_POST['login'])) {
         $email_signin        = $_POST['email_signin'];
@@ -43,36 +45,25 @@
                     $email         = $row['email'];
                     $mobilenumber   = $row['mobilenumber'];
                     $pass_word     = $row['password'];
-                    $token         = $row['token'];
-                    $is_active     = $row['is_active'];
                 }
 
                 // Verify password
                 $password = password_verify($password_signin, $pass_word);
 
                 // Allow only verified user
-                if($is_active == '1') {
                     if($email_signin == $email && $password_signin == $password) {
-                       header("Location: ./dashboard.php");
-                       
+                        header("Location: ./dashboard.php");
                        $_SESSION['id'] = $id;
                        $_SESSION['firstname'] = $firstname;
                        $_SESSION['lastname'] = $lastname;
                        $_SESSION['email'] = $email;
                        $_SESSION['mobilenumber'] = $mobilenumber;
-                       $_SESSION['token'] = $token;
 
                     } else {
                         $emailPwdErr = '<div class="alert alert-danger">
                                 Either email or password is incorrect.
                             </div>';
                     }
-                } else {
-                    $verificationRequiredErr = '<div class="alert alert-danger">
-                            Account verification is required for login.
-                        </div>';
-                }
-
             }
 
         } else {
