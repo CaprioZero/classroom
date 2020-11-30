@@ -2,7 +2,7 @@
 <?php require_once ("config/redirector.php"); ?>
 <?php require_once ("config/checklogin.php"); ?>
 <?php Confirm_login(); ?>
-<?php if ($_SESSION['user_type'] != "admin"){
+<?php if (($_SESSION['user_type'] != "admin") || ($_SESSION['user_type'] != "teacher")){
    $_SESSION["ErrorMessage"] = "You do not have the permission to enter admin zone";
    Redirect_to("loginpage.php");
 } ?>
@@ -59,12 +59,14 @@
                         Dashboard <span class="sr-only">(current)</span>
                         </a>
                      </li>
+                     <?php if ($_SESSION['user_type'] == "admin"){ ?>
                      <li class="nav-item">
                         <a class="nav-link" href="editpermission.php"><i class="fas fa-plus"></i>
                         <span data-feather="file"></span>
                         Change user permission
                         </a>
                      </li>
+                     <?php } ?>
                      <li class="nav-item">
                         <a class="nav-link" href="categories.php"><i class="fas fa-tags"></i>
                         <span data-feather="shopping-cart"></span>

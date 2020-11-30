@@ -64,7 +64,8 @@
                             Redirect_to("dashboard.php");
                         }
                         else if ($_SESSION['user_type'] == "teacher"){
-                            Redirect_to("index.php");
+                            $_SESSION["SuccessMessage"] = "Welcome {$_SESSION["lastname"]}";
+                            Redirect_to("dashboard.php");
                         }
                         else if ($_SESSION['user_type'] == "student"){
                             Redirect_to("index.php");
