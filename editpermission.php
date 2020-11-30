@@ -6,6 +6,30 @@
    $_SESSION["ErrorMessage"] = "You do not have the permission to enter admin zone";
    Redirect_to("loginpage.php");
 } ?>
+<?php
+if (isset($_POST["submit"]))
+{
+    $email = mysqli_real_escape_string($connection, $_POST["choosemail"]);
+    $permission = mysqli_real_escape_string($connection, $_POST["choosepermission"]);
+
+        global $connection;
+
+         $Query = "UPDATE users SET user_type='$permission' WHERE email='$email'";
+
+        $Execute = mysqli_query($connection, $Query);
+        if ($Execute)
+        {
+            $_SESSION["SuccessMessage"] = "Permission update Successfully";
+            Redirect_to("dashboard.php");
+        }
+        else
+        {
+            $_SESSION["ErrorMessage"] = "Something went wrong. Try Again !";
+            Redirect_to("dashboard.php");
+        }
+} //Ending of Submit Button If-Condition
+
+?>
 <!doctype html>
 <html lang="en">
    <head>
@@ -15,7 +39,7 @@
       <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
-      <title>Dashboard</title>
+      <title>Edit permission</title>
       <!-- Custom styles for this template -->
       <link href="css/style1.css" rel="stylesheet">
       <style>
@@ -54,15 +78,15 @@
                <div class="sidebar-sticky pt-3">
                   <ul class="nav flex-column">
                      <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="fas fa-columns"></i>
+                        <a class="nav-link" href="dashboard.php"><i class="fas fa-columns"></i>
                         <span data-feather="home"></span>
-                        Dashboard <span class="sr-only">(current)</span>
+                        Dashboard
                         </a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="editpermission.php"><i class="fas fa-plus"></i>
+                        <a class="nav-link active" href="#"><i class="fas fa-plus"></i>
                         <span data-feather="file"></span>
-                        Change user permission
+                        Change user permission<span class="sr-only">(current)</span>
                         </a>
                      </li>
                      <li class="nav-item">
@@ -88,51 +112,58 @@
             </nav>
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                  <h1 class="h2">Admin Dashboard</h1>
+                  <h1 class="h2">Add new post</h1>
                </div>
-               <?php
+               <div class="container-fluid">
+                  <?php
 echo ErrorMessage();
 echo SuccessMessage();
 ?>
-               <div class="container-fluid">
-                  <table class="table table-striped table-hover">
-                     <thead class="thead-dark">
-                        <tr>
-                           <th>No.</th>
-                           <th>Title</th>
-                           <th>Thumbnail</th>
-                           <th>Author</th>
-                           <th>Date&Time</th>
-                           <th>Category</th>
-                           <th>Actions</th>
-                           <th>Detail</th>
-                        </tr>
-                     </thead>
+                  <form class="" action="editpermission.php" method="post" enctype="multipart/form-data">
 
-                  </table>
+                     <div class="form-group">
+                        <label for="categoryTitle">Choose email</label>
+                        <select class="form-control" id="choosemail" name="choosemail">
+                           <?php
+global $connection;
+$viewQuery = "SELECT * FROM users ORDER BY id desc";
+$Execute = mysqli_query($connection, $viewQuery);
+while ($DataRows = mysqli_fetch_array($Execute))
+{
+    $email = $DataRows["email"];
+?>
+                           <option> <?php echo $email; ?></option>
+                           <?php
+} ?>
+                        </select>
+                     </div>
+                     <div class="form-group">
+                        <label for="categoryTitle">Choose permission type</label>
+                        <select class="form-control" id="choosepermission" name="choosepermission">
+                        <option value="admin">admin</option>
+                        <option value="teacher">teacher</option>
+                        <option value="student">student</option>
+                        </select>
+                     </div>
+
+                     <button type="submit" name="submit" class="btn btn-success">Edit user permission</button>
+                  </form>
                </div>
             </main>
          </div>
       </div>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="js/jquery-3.5.1.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
       <script src="js/myScript.js"></script>
       <script language="JavaScript" type="text/javascript">
          $(document).ready(function(){
-             $("a.delete").click(function(e){
-                 if(!confirm('Are you sure?')){
-                     e.preventDefault();
-                     return false;
-                 }
-                 return true;
-             });
+            window.setTimeout(function() {
+               $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                  $(".alert").remove(); 
+               });
+            }, 2000);
          });
-         window.setTimeout(function() {
-            $(".alert").fadeTo(500, 0).slideUp(500, function(){
-               $(".alert").remove(); 
-            });
-         }, 2000);
       </script>
    </body>
 </html>

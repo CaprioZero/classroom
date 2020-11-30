@@ -17,7 +17,7 @@ if (mysqli_num_rows($result) > 0)
 		mysqli_query($connection, $sql);
 
 		$_SESSION["SuccessMessage"] = "Password has been changed";
-		header('Location: ../loginpage.php');
+		header('Location: http://localhost/classroom/loginpage.php');
 	}
 	else
 	{

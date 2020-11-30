@@ -1,7 +1,5 @@
 <?php
 
-session_start();
-
 function ErrorMessage(){
   if(isset($_SESSION["ErrorMessage"])){
     $Output = "<div class=\"alert alert-danger alert-dismissible fade show\">" ;

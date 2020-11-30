@@ -67,11 +67,12 @@
                     $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
                     // Query
-                    $sql = "INSERT INTO users (firstname, lastname, email, mobilenumber, password, date_time) VALUES ('{$firstname}', '{$lastname}', '{$email}', '{$mobilenumber}', '{$password_hash}', now())";
+                    $sql = "INSERT INTO users (firstname, lastname, email, mobilenumber, password, date_time, user_type) VALUES ('{$firstname}', '{$lastname}', '{$email}', '{$mobilenumber}', '{$password_hash}', now(), 'student')";
                     
                     // Create mysql query
                     $sqlQuery = mysqli_query($connection, $sql);
-                    
+                    $_SESSION["SuccessMessage"] = "Create account successfully";
+                    header('Location: http://localhost/classroom/loginpage.php');
                     if(!$sqlQuery){
                         die("MySQL query failed!" . mysqli_error($connection));
                     } 

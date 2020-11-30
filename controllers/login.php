@@ -45,6 +45,7 @@
                     $email         = $row['email'];
                     $mobilenumber   = $row['mobilenumber'];
                     $pass_word     = $row['password'];
+                    $user_type     = $row['user_type'];
                 }
 
                 // Verify password
@@ -52,12 +53,22 @@
 
                 // Allow only verified user
                     if($email_signin == $email && $password_signin == $password) {
-                        header("Location: ./dashboard.php");
                        $_SESSION['id'] = $id;
                        $_SESSION['firstname'] = $firstname;
                        $_SESSION['lastname'] = $lastname;
                        $_SESSION['email'] = $email;
                        $_SESSION['mobilenumber'] = $mobilenumber;
+                       $_SESSION['user_type'] = $user_type;
+                        if ($_SESSION['user_type'] == "admin"){
+                            $_SESSION["SuccessMessage"] = "Welcome {$_SESSION["lastname"]}";
+                            Redirect_to("dashboard.php");
+                        }
+                        else if ($_SESSION['user_type'] == "teacher"){
+                            Redirect_to("index.php");
+                        }
+                        else if ($_SESSION['user_type'] == "student"){
+                            Redirect_to("index.php");
+                        }
 
                     } else {
                         $emailPwdErr = '<div class="alert alert-danger">
