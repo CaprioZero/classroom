@@ -2,7 +2,7 @@
 <?php require_once ("config/redirector.php"); ?>
 <?php require_once ("config/checklogin.php"); ?>
 <?php Confirm_login(); ?>
-<?php if (($_SESSION['user_type'] != "admin") || ($_SESSION['user_type'] != "teacher")){
+<?php if ($_SESSION['user_type'] == "student"){
    $_SESSION["ErrorMessage"] = "You do not have the permission to enter admin zone";
    Redirect_to("loginpage.php");
 } ?>
