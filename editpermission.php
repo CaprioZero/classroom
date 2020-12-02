@@ -1,6 +1,7 @@
 <?php require_once ("config/db.php"); ?>
 <?php require_once ("config/redirector.php"); ?>
 <?php require_once ("config/checklogin.php"); ?>
+<?php require_once ("config/messages.php"); ?>
 <?php Confirm_login(); ?>
 <?php if ($_SESSION['user_type'] != "admin"){
    $_SESSION["ErrorMessage"] = "You do not have the permission to enter admin zone";
@@ -9,10 +10,9 @@
 <?php
 if (isset($_POST["submit"]))
 {
+   global $connection;
     $email = mysqli_real_escape_string($connection, $_POST["choosemail"]);
     $permission = mysqli_real_escape_string($connection, $_POST["choosepermission"]);
-
-        global $connection;
 
          $Query = "UPDATE users SET user_type='$permission' WHERE email='$email'";
 
@@ -56,7 +56,7 @@ if (isset($_POST["submit"]))
          }
       </style>
       <!-- Custom styles for this template -->
-      <link href="css/style.css" rel="stylesheet">
+      <link href="css/style1.css" rel="stylesheet">
    </head>
    <body>
       <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
@@ -88,21 +88,15 @@ if (isset($_POST["submit"]))
                         </a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="categories.php"><i class="fas fa-tags"></i>
+                        <a class="nav-link" href="addclass.php"><i class="fas fa-tags"></i>
                         <span data-feather="shopping-cart"></span>
-                        Categories
+                        Add class
                         </a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="admin.php"><i class="fas fa-users-cog"></i>
-                        <span data-feather="users"></span>
-                        Admin list
-                        </a>
-                     </li>
-                     <li class="nav-item">
-                        <a class="nav-link" rel="noopener noreferrer" target="_blank" href="index.php?page=1"><i class="far fa-eye"></i>
+                        <a class="nav-link" rel="noopener noreferrer" target="_blank" href="index.php"><i class="far fa-eye"></i>
                         <span data-feather="layers"></span>
-                        View blog
+                        View classroom
                         </a>
                      </li>
                   </ul>
@@ -120,7 +114,7 @@ echo SuccessMessage();
                   <form class="" action="editpermission.php" method="post" enctype="multipart/form-data">
 
                      <div class="form-group">
-                        <label for="categoryTitle">Choose email</label>
+                        <label for="choosemail">Choose email</label>
                         <select class="form-control" id="choosemail" name="choosemail">
                            <?php
 global $connection;
@@ -136,7 +130,7 @@ while ($DataRows = mysqli_fetch_array($Execute))
                         </select>
                      </div>
                      <div class="form-group">
-                        <label for="categoryTitle">Choose permission type</label>
+                        <label for="choosepermission">Choose permission type</label>
                         <select class="form-control" id="choosepermission" name="choosepermission">
                         <option value="admin">admin</option>
                         <option value="teacher">teacher</option>
