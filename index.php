@@ -88,10 +88,6 @@ if (isset($_POST["submit"]))
         </form>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control" type="search" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
                <a class="nav-link" href="logout.php">Sign out</a>
@@ -147,7 +143,7 @@ while ($DataRows = mysqli_fetch_array($Execute)  or die( mysqli_error($connectio
   </ul>
     </div>
     <div class="card-footer">
-    <a rel="noopener noreferrer" target="_blank" href="$" class="btn btn-primary">View class &rarr;</a>
+    <a rel="noopener noreferrer" target="_blank" href="infoclass.php?id=<?php echo $ClassId; ?>" class="btn btn-primary">View class &rarr;</a>
     </div>
 </div>
   </div>

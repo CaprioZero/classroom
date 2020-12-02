@@ -1,3 +1,49 @@
+<?php require_once ("config/db.php"); ?>
+<?php require_once ("config/redirector.php"); ?>
+<?php require_once ("config/checklogin.php"); ?>
+<?php require_once ("config/messages.php"); ?>
+<?php Confirm_login(); ?>
+<?php
+// SELECT * FROM `posts` WHERE class_id ='5'
+$PostIdFromGet = $_GET["id"];
+global $connection;
+if (isset($_GET["submit"]))
+{
+  $Query = "SELECT * FROM posts WHERE class_id='$PostIdFromGet' ORDER BY class_id desc";
+$run = mysqli_query($connection, $Query);
+$DataRows = mysqli_fetch_array($run);
+  $PostId = $DataRows["post_id"];
+   $Comment = $_GET["commentArea"];
+   $Commenter = $_SESSION['firstname'] ." ". $_SESSION['lastname'];
+    date_default_timezone_set("Asia/Ho_Chi_Minh");
+    $CurrentTime = time();
+    $DateTime = strftime("%d-%m-%Y %H:%M:%S", $CurrentTime);
+    $DateTime; 
+    if (empty($Comment))
+    {
+        $_SESSION["ErrorMessage"] = "Please enter comment";
+        header("Location: infoclass.php?id=$PostIdFromGet");
+    }
+    else
+    {
+        // Query to insert category in DB When everything is fine
+        
+        $Query = "INSERT INTO comments(commenter,datetime,content,posts_id) VALUES ('$Commenter','$DateTime','$Comment','$PostId')";
+        $Execute = mysqli_query($connection, $Query) or die( mysqli_error($connection));
+        if ($Execute)
+        {
+            $_SESSION["SuccessMessage"] = "Comment added Successfully";
+            header("Location: infoclass.php?id=$PostIdFromGet");
+        }
+        else
+        {
+            $_SESSION["ErrorMessage"] = "Something went wrong. Try Again !";
+            header("Location: infoclass.php?id=$PostIdFromGet");
+        }
+    }
+} //Ending of Submit Button If-Condition
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,14 +54,27 @@
   <link rel="stylesheet" href="asset/css/style.css">
   
 
-  <title>infoClass</title>
+  <?php
+
+global $connection;
+$viewQuery = "SELECT * FROM class WHERE class_id='$PostIdFromGet'";
+$Execute = mysqli_query($connection, $viewQuery);
+while ($DataRows = mysqli_fetch_array($Execute))
+{
+    $ClassTitle = $DataRows["class_name"];
+?>
+      <title><?php echo htmlentities($ClassTitle); ?></title>
+      <?php
+} ?>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
   <div class="background-inclass">
     <div class="top ">
-
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Logo</a>
+        <a class="navbar-brand" href="index.php">Classroom</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -26,119 +85,94 @@
               <a class="nav-link" href="#"><i class="fas fa-user"></i><span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home</i><span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-th"></i>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Menu</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a>
-              </div>
-            </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-plus"></i>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Join a class</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Add a class</a>
-              </div>
+              <a class="nav-link" href="#"><?php echo $_SESSION['firstname']; ?>
+                        <?php echo $_SESSION['lastname']; ?></i><span class="sr-only">(current)</span></a>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control" type="search" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
+
         </div>
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+               <a class="nav-link" href="logout.php">Sign out</a>
+            </li>
+         </ul>
       </nav>
     </div>
 
-
     <div class="mid mg-t">
       <div class="container">
+      <?php
+echo ErrorMessage();
+echo SuccessMessage();
+?>
         <div class="row">
 
-         <div class="col-md-4 col-xs-12">
-           <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action oranges">
-             <i class="fas fa-tasks"></i> Coming up next
-           </a>
-           <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1 title-news">Woohoo, no work due soon!</h5>
-            </div>
-            <small>View all</small>
-          </a>
 
 
 
-        </div>
-      </div>
 
-
-
-      <div class="col-md-8 col-xs-12 settings">
+      <div class="col-md-8 col-xs-12 settings mb-5">
         <div class="row">
           <div class="col-xs-12 col-md-12">
             
   
-            <div class="list-group">
+            <div class="list-group mb-5">
               <a href="#" class="list-group-item list-group-item-action oranges">
-               <i class="fas fa-map"></i></i> To do
+               <i class="fas fa-map"></i></i> Stream
              </a>
-             <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                <div class="info">
-              <h1 class="head-info"><i class="fas fa-briefcase"></i> WRITING PORTFOLIO 3</h1>
-              <div class="sub-mid">
-                <p class="teacher"><i class="fas fa-user"></i> Dung Cẩm Quang</p>
-                <div class="day left">Oct 20 2020</div>
-                <div class="deadline right">Oct 30 2020,11:59 PM</div>
-              </div>
-              <div class="form-group">
-                <p>.</p>
-              </div>
-    
-            </div>
-              </div>
-              <p class="mb-1 desc-news">Hi all,
+             <?php
+global $connection;
+$viewQuery = "SELECT * FROM posts WHERE class_id='$PostIdFromGet' ORDER BY post_id desc";
+$Execute = mysqli_query($connection, $viewQuery);
+while ($DataRows = mysqli_fetch_array($Execute))
+{
+    $PostId = $DataRows["post_id"];
+    $Author = $DataRows["author"];
+    $DateTime = $DataRows["datetime"];
+    $Content = $DataRows["content"];
+    $File = $DataRows["file"];
+?>
+             <div class="card text-center mb-5">
+  <div class="card-header">
+  <?php echo htmlentities($Author); ?><br><?php echo htmlentities($DateTime); ?>
+  </div>
 
-                    As assigned by the center, I am in charge of marking 1st-year students' code placement test. Hence, we are NOT going to have a class meeting on Monday, Oct 30th, 2020. 
-                    When you're off from school, please try to finish the ELAB exercises.
+  <div class="card-body">
+    <p class="card-text"><?php echo htmlentities($Content); ?></p>
+    <?php         if (!empty($File))
+        {?><a href="uploads/<?php echo $File; ?>" class="btn btn-primary" download>Download</a> <?php }?>
 
-                    See you!</p>
-              <small><i class="fas fa-calendar-week"></i> Calendar</small>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1 title-news">Hight quality classes</h5>
-              </div>
-              <small><i class="fas fa-calendar-week"></i> Calendar</small>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1 title-news">Standard classes</h5>
-              </div>
-              <small><i class="fas fa-calendar-week"></i> Calendar</small>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1 title-news">English classes</h5>
-              </div>
-              <small><i class="fas fa-calendar-week"></i> Calendar</small>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1 title-news">Vietnamese classes</h5>
-              </div>
-              <small><i class="fas fa-calendar-week"></i> Calendar</small>
-            </a>
+  </div>
+  <div class="card-footer text-muted">
+  <form class="" action="infoclass.php?id=<?php echo $PostIdFromGet; ?>" method="get" enctype="multipart/form-data">
+  <input type="hidden" name="id" value="<?php echo htmlspecialchars($PostIdFromGet, ENT_QUOTES); ?>" />
+										<textarea name="commentArea" id="commentArea" placeholder="Add class comment..." ></textarea>
+										<button type="submit" name="submit" class="btn btn-success green"><i class="fa fa-share"></i> Send</button>
+                  </form>
+
+                  <?php
+$commentQuery = "SELECT * FROM comments WHERE posts_id='$PostId' ORDER BY id desc";
+$dothis = mysqli_query($connection, $commentQuery);
+while ($DataRows = mysqli_fetch_array($dothis))
+{
+    $CommentId = $DataRows["id"];
+    $Commenter = $DataRows["commenter"];
+    $CommentDateTime = $DataRows["datetime"];
+    $Content = $DataRows["content"];
+?>
+
+
+        <p class="lead">User: <?php echo $Commenter; ?></p>
+        <p class="small">Comment at: <?php echo $CommentDateTime; ?></p>
+        <p>Said: <?php echo $Content; ?></p>
+
+
+
+<?php } ?>
+  </div>
+</div>
+<?php
+} ?>
 
 
 
@@ -161,8 +195,14 @@
 </div>
 </div>
 </div>
+<script language="JavaScript" type="text/javascript">
+         $(document).ready(function(){
+            window.setTimeout(function() {
+               $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                  $(".alert").remove(); 
+               });
+            }, 2000);
+         });
+      </script>
 </body>
 </html>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

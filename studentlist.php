@@ -84,6 +84,18 @@ if (isset($_GET["submit"]))
                         Dashboard
                         </a>
                      </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="postdashboard.php"><i class="fas fa-columns"></i>
+                        <span data-feather="home"></span>
+                        Post Dashboard
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="commentdashboard.php"><i class="fas fa-columns"></i>
+                        <span data-feather="home"></span>
+                        Comment Dashboard
+                        </a>
+                     </li>
                      <?php if ($_SESSION['user_type'] == "admin"){ ?>
                      <li class="nav-item">
                         <a class="nav-link" href="editpermission.php"><i class="fas fa-plus"></i>
@@ -96,6 +108,12 @@ if (isset($_GET["submit"]))
                         <a class="nav-link" href="addclass.php"><i class="fas fa-tags"></i>
                         <span data-feather="shopping-cart"></span>
                         Add class
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="addnewpost.php"><i class="fas fa-tags"></i>
+                        <span data-feather="shopping-cart"></span>
+                        Add post
                         </a>
                      </li>
                      <li class="nav-item">

@@ -109,6 +109,18 @@ if (isset($_POST["submit"]))
                         Dashboard
                         </a>
                      </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="postdashboard.php"><i class="fas fa-columns"></i>
+                        <span data-feather="home"></span>
+                        Post Dashboard
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="commentdashboard.php"><i class="fas fa-columns"></i>
+                        <span data-feather="home"></span>
+                        Comment Dashboard
+                        </a>
+                     </li>
                      <?php if ($_SESSION['user_type'] == "admin"){ ?>
                      <li class="nav-item">
                         <a class="nav-link" href="editpermission.php"><i class="fas fa-plus"></i>
@@ -124,9 +136,9 @@ if (isset($_POST["submit"]))
                         </a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="studentlist.php"><i class="fas fa-users-cog"></i>
-                        <span data-feather="users"></span>
-                        Student list
+                        <a class="nav-link" href="addnewpost.php"><i class="fas fa-tags"></i>
+                        <span data-feather="shopping-cart"></span>
+                        Add post
                         </a>
                      </li>
                      <li class="nav-item">

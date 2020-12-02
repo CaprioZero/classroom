@@ -7,6 +7,49 @@
    $_SESSION["ErrorMessage"] = "You do not have the permission to enter admin zone";
    Redirect_to("loginpage.php");
 } ?>
+<?php
+$uid = $_SESSION['id'];
+if (isset($_POST["submit"]))
+{
+   $ClassName = $_POST["className"];
+   $Post = $_POST["postArea"];
+    $File = $_FILES["fileSelect"]["name"];
+    $Target = "uploads/" . basename($_FILES["fileSelect"]["name"]);
+    date_default_timezone_set("Asia/Ho_Chi_Minh");
+    $CurrentTime = time();
+    $DateTime = strftime("%d-%m-%Y %H:%M:%S", $CurrentTime);
+    $DateTime;
+    $Author = $_SESSION['firstname'] ." ". $_SESSION['lastname'];
+    $DoQuery = "SELECT * FROM class WHERE class_name = '$ClassName' ORDER BY class_id desc";
+    $doit = mysqli_query($connection, $DoQuery) or die( mysqli_error($connection));
+    $Rows = mysqli_fetch_array($doit);
+    $ClassId = $Rows["class_id"];
+    if (empty($Post))
+    {
+        $_SESSION["ErrorMessage"] = "Please enter content";
+        Redirect_to("addnewpost.php");
+    }
+    else
+    {
+        // Query to insert category in DB When everything is fine
+        global $connection;
+        $Query = "INSERT INTO posts(author,datetime,content,file,class_id,user_id) VALUES ('$Author','$DateTime','$Post','$File','$ClassId','$uid')";
+        $Execute = mysqli_query($connection, $Query) or die( mysqli_error($connection));
+        move_uploaded_file($_FILES["fileSelect"]["tmp_name"], $Target);
+        if ($Execute)
+        {
+            $_SESSION["SuccessMessage"] = "Post added Successfully";
+            Redirect_to("postdashboard.php");
+        }
+        else
+        {
+            $_SESSION["ErrorMessage"] = "Something went wrong. Try Again !";
+            Redirect_to("postdashboard.php");
+        }
+    }
+} //Ending of Submit Button If-Condition
+
+?>
 <!doctype html>
 <html lang="en">
    <head>
@@ -16,7 +59,7 @@
       <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
-      <title>Dashboard</title>
+      <title>New post</title>
       <!-- Custom styles for this template -->
       <link href="css/style1.css" rel="stylesheet">
       <style>
@@ -41,12 +84,6 @@
          <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
          <span class="navbar-toggler-icon"></span>
          </button>
-         <form class="form-inline d-none d-sm-block" action="dashboard.php">
-                        <div class="form-group">
-                           <input class="form-control mr-2" type="text" name="search" placeholder="Search here">
-                           <button class="btn btn-primary" name="searchButton">Go</button>
-                        </div>
-                     </form>
          <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
                <a class="nav-link" href="logout.php">Sign out</a>
@@ -58,10 +95,10 @@
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                <div class="sidebar-sticky pt-3">
                   <ul class="nav flex-column">
-                     <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="fas fa-columns"></i>
+                  <li class="nav-item">
+                        <a class="nav-link" href="dashboard.php"><i class="fas fa-columns"></i>
                         <span data-feather="home"></span>
-                        Dashboard <span class="sr-only">(current)</span>
+                        Dashboard
                         </a>
                      </li>
                      <li class="nav-item">
@@ -91,9 +128,9 @@
                         </a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="addnewpost.php"><i class="fas fa-tags"></i>
+                        <a class="nav-link active" href="#"><i class="fas fa-tags"></i>
                         <span data-feather="shopping-cart"></span>
-                        Add post
+                        Add post <span class="sr-only">(current)</span>
                         </a>
                      </li>
                      <li class="nav-item">
@@ -102,86 +139,48 @@
                         View classroom
                         </a>
                      </li>
-                     
                   </ul>
                </div>
             </nav>
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                  <h1 class="h2">Admin Dashboard</h1>
+                  <h1 class="h2">Add new post</h1>
                </div>
-               <?php
+               <div class="container-fluid">
+                  <?php
 echo ErrorMessage();
 echo SuccessMessage();
 ?>
-               <div class="container-fluid">
-                  <table class="table table-striped table-hover">
-                     <thead class="thead-dark">
-                        <tr>
-                           <th>No.</th>
-                           <th>Class name</th>
-                           <th>Thumbnail</th>
-                           <th>Subject</th>
-                           <th>Room</th>
-                           <th>Class code</th>
-                           <th>Actions</th>
-                        </tr>
-                     </thead>
-                     <?php
-$SrNo = 0;
-$uid = $_SESSION['id'];
+                  <form class="" action="addnewpost.php" method="post" enctype="multipart/form-data">
+                  <div class="form-group">
+                        <label for="className">Choose class to make post</label>
+                        <select class="form-control" id="className" name="className">
+                           <?php
+                           $uid = $_SESSION['id'];
 global $connection;
-if (isset($_GET["searchButton"]))
-{
-    $Search = $_GET["search"];
-    $viewQuery = "SELECT * FROM class WHERE class_name LIKE '%$Search%' OR subject LIKE '%$Search%' OR room LIKE '%$Search%'";
-}
-else if ($_SESSION['user_type'] == "admin") {
-   $viewQuery = "SELECT * FROM class ORDER BY class_id desc";
-}
-else if ($_SESSION['user_type'] == "teacher") {
-   $viewQuery = "SELECT * FROM class WHERE user_id = '$uid' ORDER BY class_id desc";
-}
-$Execute = mysqli_query($connection, $viewQuery) or die( mysqli_error($connection));
-$SrNo = 0;
+$viewQuery = "SELECT * FROM class WHERE user_id = '$uid'";
+$Execute = mysqli_query($connection, $viewQuery);
 while ($DataRows = mysqli_fetch_array($Execute))
 {
-    $ClassId = $DataRows["class_id"];
     $ClassName = $DataRows["class_name"];
-    $Thumbnail = $DataRows["thumbnail"];
-    $Subject = $DataRows["subject"];
-    $Room = $DataRows["room"];
-    $ClassCode = $DataRows["class_code"];
-    $SrNo++;
 ?>
-                     <tbody>
-                        <tr>
-                           <td><?php echo $SrNo; ?></td>
-                           <td><?php echo $ClassName; ?></td>
-                           <td><img id="post_img" src="uploads/<?php echo htmlentities($Thumbnail); ?>" style="object-fit: contain; width: 100%; height: 100px;" alt="Card image cap"></td>
-                           <td><?php echo $Subject; ?></td>
-                           <td><?php echo $Room; ?></td>
-                           <td><?php echo $ClassCode; ?></td>
-                           <td>
-                           <a href="studentlist.php?cid=<?php echo $ClassId; ?>">
-                              <button type="submit" class="btn btn-success">Manage student</button>
-                              </a>
-                              <br>
-                              <br>
-                              <a href="editclass.php?id=<?php echo $ClassId; ?>">
-                              <button type="submit" class="btn btn-warning">Edit</button>
-                              </a>
-                              <br>
-                              <br>
-                              <a class="delete" href="deleteclass.php?id=<?php echo $ClassId; ?>">
-                              <button type="submit" class="btn btn-danger">Delete</button>
-                              </a>
-                           </td>
-                        </tr>
-                     </tbody>
-                     <?php
+                           <option> <?php echo $ClassName; ?></option>
+                           <?php
 } ?>
-                  </table>
+                        </select>
+                     </div>
+                  <div class="form-group">
+                        <label for="postArea">Post</label>
+                        <textarea class="form-control" name="postArea" id="postArea" rows="9"></textarea>
+                     </div>
+                     
+                     <div class="form-group">
+                        <label for="fileSelect">Select File</label>
+                        <input class="form-control" type="file" name="fileSelect" id="fileSelect">
+                     </div>
+
+                     <button type="submit" name="submit" class="btn btn-success">Add new post</button>
+                  </form>
                </div>
             </main>
          </div>
@@ -189,21 +188,15 @@ while ($DataRows = mysqli_fetch_array($Execute))
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+      <script src="js/myScript.js"></script>
       <script language="JavaScript" type="text/javascript">
          $(document).ready(function(){
-             $("a.delete").click(function(e){
-                 if(!confirm('Are you sure?')){
-                     e.preventDefault();
-                     return false;
-                 }
-                 return true;
-             });
+            window.setTimeout(function() {
+               $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                  $(".alert").remove(); 
+               });
+            }, 2000);
          });
-         window.setTimeout(function() {
-            $(".alert").fadeTo(500, 0).slideUp(500, function(){
-               $(".alert").remove(); 
-            });
-         }, 2000);
       </script>
    </body>
 </html>

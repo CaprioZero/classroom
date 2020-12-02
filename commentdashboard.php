@@ -3,6 +3,8 @@
 <?php require_once ("config/checklogin.php"); ?>
 <?php require_once ("config/messages.php"); ?>
 <?php Confirm_login(); ?>
+<!-- SELECT * FROM comments c, posts p WHERE c.posts_id = p.post_id and p.user_id = '5' -->
+
 <?php if ($_SESSION['user_type'] == "student"){
    $_SESSION["ErrorMessage"] = "You do not have the permission to enter admin zone";
    Redirect_to("loginpage.php");
@@ -16,7 +18,7 @@
       <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
-      <title>Dashboard</title>
+      <title>Post Dashboard</title>
       <!-- Custom styles for this template -->
       <link href="css/style1.css" rel="stylesheet">
       <style>
@@ -59,21 +61,21 @@
                <div class="sidebar-sticky pt-3">
                   <ul class="nav flex-column">
                      <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="fas fa-columns"></i>
+                        <a class="nav-link" href="dashboard.php"><i class="fas fa-columns"></i>
                         <span data-feather="home"></span>
-                        Dashboard <span class="sr-only">(current)</span>
+                        Dashboard
                         </a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="postdashboard.php"><i class="fas fa-columns"></i>
+                        <a class="nav-link" href="#"><i class="fas fa-columns"></i>
                         <span data-feather="home"></span>
                         Post Dashboard
                         </a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="commentdashboard.php"><i class="fas fa-columns"></i>
+                        <a class="nav-link active" href="commentdashboard.php"><i class="fas fa-columns"></i>
                         <span data-feather="home"></span>
-                        Comment Dashboard
+                        Comment Dashboard <span class="sr-only">(current)</span>
                         </a>
                      </li>
                      <?php if ($_SESSION['user_type'] == "admin"){ ?>
@@ -110,6 +112,8 @@
                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                   <h1 class="h2">Admin Dashboard</h1>
                </div>
+               <!-- SELECT p.post_id, c.class_name FROM class c, posts p WHERE c.class_id = p.class_id
+ -->
                <?php
 echo ErrorMessage();
 echo SuccessMessage();
@@ -119,61 +123,32 @@ echo SuccessMessage();
                      <thead class="thead-dark">
                         <tr>
                            <th>No.</th>
-                           <th>Class name</th>
-                           <th>Thumbnail</th>
-                           <th>Subject</th>
-                           <th>Room</th>
-                           <th>Class code</th>
+                           <th>Commenter</th>
+                           <th>Comment</th>
                            <th>Actions</th>
                         </tr>
                      </thead>
                      <?php
-$SrNo = 0;
 $uid = $_SESSION['id'];
 global $connection;
-if (isset($_GET["searchButton"]))
-{
-    $Search = $_GET["search"];
-    $viewQuery = "SELECT * FROM class WHERE class_name LIKE '%$Search%' OR subject LIKE '%$Search%' OR room LIKE '%$Search%'";
-}
-else if ($_SESSION['user_type'] == "admin") {
-   $viewQuery = "SELECT * FROM class ORDER BY class_id desc";
-}
-else if ($_SESSION['user_type'] == "teacher") {
-   $viewQuery = "SELECT * FROM class WHERE user_id = '$uid' ORDER BY class_id desc";
-}
+$viewQuery = "SELECT c.id, commenter, c.content FROM comments c, posts p WHERE c.posts_id = p.post_id and p.user_id = '$uid'";
+
 $Execute = mysqli_query($connection, $viewQuery) or die( mysqli_error($connection));
 $SrNo = 0;
 while ($DataRows = mysqli_fetch_array($Execute))
 {
-    $ClassId = $DataRows["class_id"];
-    $ClassName = $DataRows["class_name"];
-    $Thumbnail = $DataRows["thumbnail"];
-    $Subject = $DataRows["subject"];
-    $Room = $DataRows["room"];
-    $ClassCode = $DataRows["class_code"];
+    $CommentId = $DataRows["id"];
+    $Commenter = $DataRows["commenter"];
+    $Content = $DataRows["content"];
     $SrNo++;
 ?>
                      <tbody>
                         <tr>
                            <td><?php echo $SrNo; ?></td>
-                           <td><?php echo $ClassName; ?></td>
-                           <td><img id="post_img" src="uploads/<?php echo htmlentities($Thumbnail); ?>" style="object-fit: contain; width: 100%; height: 100px;" alt="Card image cap"></td>
-                           <td><?php echo $Subject; ?></td>
-                           <td><?php echo $Room; ?></td>
-                           <td><?php echo $ClassCode; ?></td>
+                           <td><?php echo $Commenter; ?></td>
+                           <td><?php echo $Content; ?></td>
                            <td>
-                           <a href="studentlist.php?cid=<?php echo $ClassId; ?>">
-                              <button type="submit" class="btn btn-success">Manage student</button>
-                              </a>
-                              <br>
-                              <br>
-                              <a href="editclass.php?id=<?php echo $ClassId; ?>">
-                              <button type="submit" class="btn btn-warning">Edit</button>
-                              </a>
-                              <br>
-                              <br>
-                              <a class="delete" href="deleteclass.php?id=<?php echo $ClassId; ?>">
+                              <a class="delete" href="deletecomment.php?id=<?php echo $CommentId; ?>">
                               <button type="submit" class="btn btn-danger">Delete</button>
                               </a>
                            </td>

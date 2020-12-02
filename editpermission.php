@@ -82,6 +82,18 @@ if (isset($_POST["submit"]))
                         </a>
                      </li>
                      <li class="nav-item">
+                        <a class="nav-link" href="postdashboard.php"><i class="fas fa-columns"></i>
+                        <span data-feather="home"></span>
+                        Post Dashboard
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="commentdashboard.php"><i class="fas fa-columns"></i>
+                        <span data-feather="home"></span>
+                        Comment Dashboard
+                        </a>
+                     </li>
+                     <li class="nav-item">
                         <a class="nav-link active" href="#"><i class="fas fa-plus"></i>
                         <span data-feather="file"></span>
                         Change user permission<span class="sr-only">(current)</span>
@@ -91,6 +103,12 @@ if (isset($_POST["submit"]))
                         <a class="nav-link" href="addclass.php"><i class="fas fa-tags"></i>
                         <span data-feather="shopping-cart"></span>
                         Add class
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="addnewpost.php"><i class="fas fa-tags"></i>
+                        <span data-feather="shopping-cart"></span>
+                        Add post
                         </a>
                      </li>
                      <li class="nav-item">
@@ -123,6 +141,7 @@ $Execute = mysqli_query($connection, $viewQuery);
 while ($DataRows = mysqli_fetch_array($Execute))
 {
     $email = $DataRows["email"];
+    $email = $DataRows["email"];
 ?>
                            <option> <?php echo $email; ?></option>
                            <?php
@@ -130,6 +149,7 @@ while ($DataRows = mysqli_fetch_array($Execute))
                         </select>
                      </div>
                      <div class="form-group">
+
                         <label for="choosepermission">Choose permission type</label>
                         <select class="form-control" id="choosepermission" name="choosepermission">
                         <option value="admin">admin</option>

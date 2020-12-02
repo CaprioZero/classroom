@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2020 at 09:20 AM
+-- Generation Time: Dec 02, 2020 at 03:21 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -29,10 +29,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `class` (
   `class_id` int(11) NOT NULL,
-  `class_name` varchar(255) NOT NULL,
-  `subject` varchar(255) NOT NULL,
-  `room` varchar(255) NOT NULL,
-  `thumbnail` varchar(255) NOT NULL,
+  `class_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `room` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `thumbnail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
   `class_code` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -42,9 +42,62 @@ CREATE TABLE `class` (
 --
 
 INSERT INTO `class` (`class_id`, `class_name`, `subject`, `room`, `thumbnail`, `class_code`, `user_id`) VALUES
-(3, 'Admin class', 'test', '444', 'The_Notebook_Cover.jpg', 'dYWLqLMm', 1),
-(5, 'Web 1', '124q', '215r3w', 'The_Notebook_Cover.jpg', 'oxBRC2bd', 5),
-(6, 'Mobile22', 'sdh', 'gdfh', '330px-Jane_Eyre_title_page.jpg', 'xhUK2PIq', 5);
+(7, 'Lý thuyết web', 'Tìm hiểu về web, học ca 1', 'F405', 'Pinterest-Cover-De-Post-Del-Blog-Web-Design-Trends-1280x720px.jpg', 'cCyM1Ydo', 9),
+(8, 'Lý thuyết công nghệ phần mềm', 'Tìm hiểu cách làm phần mềm', 'F701', 'unnamed.png', '08QLUD73', 9),
+(9, 'Đường lối đảng cộng sản', 'Nghiên cứu về đảng', 'C208', 'thanh-lap-dang.jpg', '5VOT0PJ5', 10),
+(10, 'Tư tưởng Hồ Chí Minh', 'Học về sự vĩ đại của người', 'B202', 'CN Mac Lenin.jpg', 'LYnV89GB', 10),
+(11, 'Thực hành web', 'Should have been shift', 'A504', 'woman-typing-on-laptop-3.jpg', 'Gt1aV3bI', 11),
+(12, 'Thực hành phân tích giải thuật', 'Shift 2', 'A606', 'what-is-an-algorithm-featured-1587563495931325032820.png', 'urFP0FdN', 11);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `commenter` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `datetime` varchar(255) NOT NULL,
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `posts_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `commenter`, `datetime`, `content`, `posts_id`) VALUES
+(5, 'Đặng Minh Thắng', '02-12-2020 21:17:12', 'Các bạn tải file về', 10),
+(6, 'Vương Gia Hào', '02-12-2020 21:18:15', 'Tải sao thầy', 10),
+(7, 'Hoàng Gia Huy', '02-12-2020 21:18:38', 'Bấm nút Download', 10),
+(8, 'Hoàng Gia Huy', '02-12-2020 21:18:54', 'Và comment này để mai mốt thuyết trình để test xóa', 10),
+(9, 'Đặng Minh Thắng', '02-12-2020 21:20:25', 'stando powah zenkai da', 10),
+(10, 'Đặng Minh Thắng', '02-12-2020 21:21:10', 'baka na', 10);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `posts`
+--
+
+CREATE TABLE `posts` (
+  `post_id` int(11) NOT NULL,
+  `author` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `datetime` varchar(255) NOT NULL,
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
+  `class_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`post_id`, `author`, `datetime`, `content`, `file`, `class_id`, `user_id`) VALUES
+(10, 'Đặng Minh Thắng', '02-12-2020 21:16:51', 'Nộp bài 2/12', 'sunflower.png', 7, 9),
+(11, 'Đặng Minh Thắng', '02-12-2020 21:19:59', 'Bài này không có đính kèm file nên không có nút download', '', 7, 9);
 
 -- --------------------------------------------------------
 
@@ -56,9 +109,9 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `firstname` varchar(100) CHARACTER SET utf8 COLLATE utf8_vietnamese_ci NOT NULL,
   `lastname` varchar(100) CHARACTER SET utf8 COLLATE utf8_vietnamese_ci NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
   `mobilenumber` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL,
   `date_time` date NOT NULL,
   `reset_token` varchar(255) NOT NULL,
   `user_type` varchar(100) NOT NULL
@@ -69,12 +122,14 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `mobilenumber`, `password`, `date_time`, `reset_token`, `user_type`) VALUES
-(1, 'Dương Minh', 'Ngọc', 'nhoxhoakuter2000@gmail.com', '0999999999', '$2y$10$Xv3CN2ZPNB446NS5pxYmhOzkL9y4xb4zkPhu8FswdJap//K9pML46', '2020-11-29', '', 'admin'),
-(2, 'ngoc', 'ngoc', 'oksdnog@gmail.com', '0123456789', '$2y$10$apREhxdLj3Mu1km0mHtJsOhY2.QIHam0wSYOSSDmAEzjk2f4.FuY2', '2020-11-30', '', 'teacher'),
-(3, 'eg', 'kjs', 'test@gmail.com', '0987654321', '$2y$10$7cLp1OD.ylRaZ4XSAGUtNO2.r6zUaJ6VQB2RpRdi7ISnxDeDU9y36', '2020-11-30', '', 'teacher'),
-(5, 'dgsh', 'wehweh', 'mco09686@cuoly.com', '0888888888', '$2y$10$RmAOjOkQf97swqveWicMbOTCZ7eZOSlHElrgKvrB/MT6FuNItQNKy', '2020-11-30', '', 'teacher'),
-(6, 'rfx42372@bcaoo.com', 'rfx42372@bcaoo.com', 'rfx42372@bcaoo.com', '0987656789', '$2y$10$C7vjJ0ay33nvxoRc41ML.u8UmUCxA0Lr/dy/vfOSH7JupwuoOgUbS', '2020-12-01', '', 'student'),
-(7, 'fby90654@cuoly.com', 'fby90654@cuoly.com', 'fby90654@cuoly.com', '0887777777', '$2y$10$5C95RmTXgIknTXtSEzdh3O2qaJ38gXFLYnj1N2oitFlipbP.39eTi', '2020-12-01', '', 'student');
+(8, 'Dương Minh', 'Ngọc', 'nhoxhoakuter2000@gmail.com', '0999999999', '$2y$10$S34ekO2dv5j/QToWRiycE.1j4C/SPjHMOb8SYFikFqmS0oUrRaoPO', '2020-12-02', '', 'admin'),
+(9, 'Đặng Minh', 'Thắng', 'dangminhthang@tdtu.edu.vn', '0888888888', '$2y$10$ayr3wMAaiJHXvR8LUP9WKeWUKwjHB.s0daT4MYqFprevAfmKDZilK', '2020-12-02', '', 'teacher'),
+(10, 'Ngô Bá', 'Khiêm', 'ngobakhiem@tdtu.edu.vn', '0777777777', '$2y$10$hjcEZ.4IFp7qO1ICAZBUw.FhspDpZh1YaQYYRw6//oFwEWczLMqQ2', '2020-12-02', '', 'teacher'),
+(11, 'Bhagawan', 'Nath', 'nath@tdtu.edu.vn', '0666666666', '$2y$10$YH6tkeAOA/b.b4gNfftV9.Pau6IPJB1gxVrwucdDHx0Xrc4bnL8x6', '2020-12-02', '', 'teacher'),
+(12, 'Vũ Bích', 'Nga', '718h0541@student.tdtu.edu.vn', '0123456789', '$2y$10$RikbxoI8ysedCYaltLMXC.JpucF2YvqYgr5FQ82tkc3cP8/qTzcey', '2020-12-02', '', 'student'),
+(13, 'Vương Gia', 'Hào', '518h0003@student.tdtu.edu.vn', '0987654321', '$2y$10$exxDT.m0PCMHIne5Rby6o.nQCBePLjPmqMFjdd1smhfP3Gi.yeiuy', '2020-12-02', '', 'student'),
+(14, 'Hoàng Gia', 'Huy', '518H0626@student.tdtu.edu.vn', '0111111111', '$2y$10$ROzjau6X9lOu8fFCVFumQ.zRqH0Y1Rh8YT01Bs5g/eZBKasfTnPmm', '2020-12-02', '', 'student'),
+(15, 'Nguyễn Minh', 'Phú', 'truongkhac@uit.edu.vn', '0222222222', '$2y$10$6Xo/jYZGf6GdwTBpL2wsPeX.VXvuIQ5v45SgFiMMoFatpOlKFj6mm', '2020-12-02', '', 'student');
 
 -- --------------------------------------------------------
 
@@ -92,8 +147,11 @@ CREATE TABLE `users_class` (
 --
 
 INSERT INTO `users_class` (`user_id`, `class_id`) VALUES
-(6, 6),
-(7, 6);
+(12, 10),
+(13, 7),
+(13, 8),
+(13, 9),
+(14, 7);
 
 --
 -- Indexes for dumped tables
@@ -105,6 +163,21 @@ INSERT INTO `users_class` (`user_id`, `class_id`) VALUES
 ALTER TABLE `class`
   ADD PRIMARY KEY (`class_id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `to posts` (`posts_id`);
+
+--
+-- Indexes for table `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`post_id`),
+  ADD KEY `To class` (`class_id`),
+  ADD KEY `To user` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -128,13 +201,25 @@ ALTER TABLE `users_class`
 -- AUTO_INCREMENT for table `class`
 --
 ALTER TABLE `class`
-  MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables
@@ -145,6 +230,19 @@ ALTER TABLE `users`
 --
 ALTER TABLE `class`
   ADD CONSTRAINT `Owner of class` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `from comment to post` FOREIGN KEY (`posts_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `posts`
+--
+ALTER TABLE `posts`
+  ADD CONSTRAINT `From post to class` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `From post to user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users_class`
